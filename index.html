@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paola Pereira Fotografias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--fundo:#f8f4ee;--papel:#fffdf9;--tinta:#2f2a26;--suave:#8a7f75;--linha:#e6ddd2;--destaque:#b07d62;--zap:#25d366}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',sans-serif;font-weight:300;background:var(--fundo);color:var(--tinta);padding-bottom:110px;-webkit-font-smoothing:antialiased}
+header{text-align:center;padding:56px 20px 10px}
+.logo{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.6rem,8vw,3.8rem);line-height:1}
+.sub{font-size:.72rem;letter-spacing:.5em;text-transform:uppercase;color:var(--suave);margin-top:10px;padding-left:.5em}
+.divisor{width:48px;height:1px;background:var(--destaque);margin:26px auto}
+.intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--suave);max-width:520px;margin:0 auto;line-height:1.5}
+.filtros{display:flex;justify-content:center;gap:8px;margin:28px 0 22px}
+.filtro{font-family:inherit;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid var(--linha);color:var(--suave);padding:9px 16px;border-radius:999px;cursor:pointer}
+.filtro.ativo{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
+#status{text-align:center;color:var(--suave);padding:40px 20px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:0 clamp(8px,3vw,40px);max-width:1400px;margin:0 auto}
+@media (max-width:520px){.grade{grid-template-columns:repeat(2,1fr);gap:6px}}
+.foto{position:relative;aspect-ratio:4/5;overflow:hidden;background:#ece5db;cursor:zoom-in;border-radius:2px}
+.foto img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .6s,transform .6s;user-select:none;-webkit-user-drag:none}
+.foto img.ok{opacity:1}
+@media (hover:hover){.foto:hover img{transform:scale(1.03)}}
+.foto::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 0 var(--destaque);transition:box-shadow .2s;pointer-events:none}
+.foto.marcada::after{box-shadow:inset 0 0 0 4px var(--destaque)}
+.marca{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,.5);font-size:1.4rem;transform:rotate(-24deg);text-shadow:0 1px 3px rgba(0,0,0,.2);white-space:nowrap}
+.check{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1.5px solid #fff;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;z-index:2}
+.check svg{width:16px;height:16px;stroke:#fff;opacity:0;transition:.2s}
+.foto.marcada .check{background:var(--destaque);border-color:var(--destaque)}
+.foto.marcada .check svg{opacity:1}
+.num{position:absolute;left:10px;bottom:10px;font-size:.68rem;letter-spacing:.06em;color:#fff;background:rgba(0,0,0,.35);padding:3px 8px;border-radius:999px}
+.barra{position:fixed;left:50%;bottom:16px;transform:translate(-50%,160%);width:min(520px,calc(100% - 24px));background:var(--papel);border:1px solid var(--linha);border-radius:999px;box-shadow:0 10px 30px rgba(47,42,38,.14);display:flex;align-items:center;justify-content:space-between;padding:7px 7px 7px 22px;transition:transform .35s;z-index:5}
+.barra.visivel{transform:translate(-50%,0)}
+.barra .txt{font-size:.95rem}
+.barra strong{font-weight:500;color:var(--destaque)}
+.btn{font-family:inherit;border:none;cursor:pointer;border-radius:999px;padding:13px 22px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+.btn-escuro{background:var(--tinta);color:var(--papel)}
+.btn-zap{background:var(--zap);color:#fff;width:100%;font-size:.85rem}
+.visor{position:fixed;inset:0;background:rgba(24,21,19,.97);display:none;flex-direction:column;z-index:10;color:#f3ede6}
+.visor.aberto{display:flex}
+.v-topo{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;font-size:.8rem;letter-spacing:.1em}
+.v-meio{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;padding:0 60px}
+@media (max-width:520px){.v-meio{padding:0}}
+.v-meio img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.v-meio .marca{font-size:clamp(1.8rem,6vw,3rem)}
+.nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#f3ede6;font-size:3rem;width:56px;height:90px;cursor:pointer;opacity:.75;font-family:'Cormorant Garamond',serif}
+.ant{left:2px}.prox{right:2px}
+.v-rodape{padding:18px;display:flex;justify-content:center}
+.btn-sel{background:transparent;color:#f3ede6;border:1px solid #f3ede6}
+.btn-sel.marcada{background:var(--destaque);border-color:var(--destaque)}
+.fechar{background:none;border:none;color:#f3ede6;font-size:1.6rem;cursor:pointer;line-height:1}
+.fundo-modal{position:fixed;inset:0;background:rgba(24,21,19,.5);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.fundo-modal.aberto{display:flex}
+.modal{background:var(--papel);width:100%;max-width:460px;border-radius:22px 22px 0 0;padding:28px 24px 22px}
+@media (min-width:600px){.fundo-modal{align-items:center}.modal{border-radius:16px}}
+.modal h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2rem;line-height:1.1}
+.modal p{color:var(--suave);font-size:.95rem;margin:8px 0 18px}
+.miniaturas{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px}
+.miniaturas img{width:56px;height:70px;object-fit:cover;border-radius:2px;flex:none}
+.modal label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--suave)}
+.modal input{width:100%;margin:8px 0 18px;padding:13px 14px;border:1px solid var(--linha);border-radius:10px;font-family:inherit;font-size:1rem;background:var(--fundo);color:var(--tinta)}
+.modal input:focus{outline:none;border-color:var(--destaque)}
+.modal input.erro{border-color:#c0574b}
+.cancelar{display:block;margin:14px auto 0;background:none;border:none;color:var(--suave);font-family:inherit;font-size:.88rem;cursor:pointer;text-decoration:underline}
+footer{text-align:center;padding:60px 20px 10px;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--suave)}
+footer a{color:var(--destaque);text-decoration:none;letter-spacing:.1em;text-transform:none;font-size:.9rem;display:block;margin-top:10px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="logo">Paola Pereira</h1>
+  <div class="sub">Fotografias</div>
+  <div class="divisor"></div>
+  <p class="intro">Fique à vontade para ver todas as fotos com calma. Toque no círculo para escolher as suas favoritas e, quando terminar, é só finalizar.</p>
+  <div class="filtros">
+    <button class="filtro ativo" data-f="todas" id="fTodas">Todas</button>
+    <button class="filtro" data-f="selecionadas" id="fSel">Selecionadas (0)</button>
+  </div>
+</header>
+
+<div id="status">Carregando as fotos…</div>
+<div class="grade" id="grade"></div>
+
+<footer>© Paola Pereira Fotografias<span id="insta"></span></footer>
+
+<div class="barra" id="barra">
+  <span class="txt"><strong id="qtd">0</strong> <span id="qtdTexto">fotos selecionadas</span></span>
+  <button class="btn btn-escuro" id="finalizar">Finalizar</button>
+</div>
+
+<div class="visor" id="visor">
+  <div class="v-topo"><span id="vInfo"></span><button class="fechar" id="vFechar" aria-label="Fechar">✕</button></div>
+  <div class="v-meio" id="vMeio">
+    <img id="vImg" alt="">
+    <div class="marca">Paola Pereira</div>
+    <button class="nav ant" id="vAnt" aria-label="Anterior">‹</button>
+    <button class="nav prox" id="vProx" aria-label="Próxima">›</button>
+  </div>
+  <div class="v-rodape"><button class="btn btn-sel" id="vSel">Selecionar esta foto</button></div>
+</div>
+
+<div class="fundo-modal" id="modal">
+  <div class="modal">
+    <h2 id="mTitulo">Suas fotos</h2>
+    <p>Confira sua seleção. Ao enviar, a lista chega direto no meu WhatsApp e a gente combina o resto por lá.</p>
+    <div class="miniaturas" id="miniaturas"></div>
+    <label for="nome">Seu nome</label>
+    <input id="nome" type="text" placeholder="Ana Souza" autocomplete="name">
+    <button class="btn btn-zap" id="enviar">Enviar pelo WhatsApp</button>
+    <button class="cancelar" id="cancelar">Voltar e escolher mais</button>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  usuario: "felipefernandesfs22-oss",   // seu nome de usuário no GitHub
+  repositorio: "fotos-",                // nome do repositório
+  branch: "main",                       // normalmente é "main", não precisa mexer
+  whatsapp: "5548999471803",            // 55 + DDD + número, só números
+};
+// ====================================
+
+const PASTA = "fotos";
+const MARCA = "Paola Pereira";
+const $ = id => document.getElementById(id);
+const chave = "selecao_paola";
+const selecionadas = new Set(JSON.parse(localStorage.getItem(chave) || "[]"));
+let fotos = [], cards = [], navLista = [], atual = -1, filtro = "todas";
+
+const semExt = n => n.replace(/\.[^.]+$/, "");
+const caminho = n => PASTA + "/" + encodeURIComponent(n);
+const salvar = () => localStorage.setItem(chave, JSON.stringify([...selecionadas]));
+const status = t => { $("status").textContent = t; $("status").style.display = t ? "block" : "none"; };
+
+if (CONFIG.instagram) {
+  const a = document.createElement("a");
+  a.href = "https://instagram.com/" + CONFIG.instagram;
+  a.target = "_blank";
+  a.textContent = "@" + CONFIG.instagram;
+  $("insta").appendChild(a);
+}
+
+async function carregar() {
+  try {
+    const r = await fetch(`https://api.github.com/repos/${CONFIG.usuario}/${CONFIG.repositorio}/git/trees/${CONFIG.branch}?recursive=1`);
+    if (!r.ok) throw new Error(r.status);
+    const dados = await r.json();
+    const prefixo = PASTA + "/";
+    fotos = dados.tree
+      .filter(i => i.type === "blob" && i.path.startsWith(prefixo))
+      .map(i => i.path.slice(prefixo.length))
+      .filter(n => !n.includes("/") && /\.(jpe?g|png|webp)$/i.test(n))
+      .sort((a, b) => a.localeCompare(b, "pt-BR", { numeric: true }));
+    [...selecionadas].forEach(n => { if (!fotos.includes(n)) selecionadas.delete(n); });
+    salvar();
+    if (!fotos.length) return status("As fotos ainda não foram publicadas.");
+    $("fTodas").textContent = `Todas (${fotos.length})`;
+    status("");
+    montar();
+  } catch (e) {
+    status("Não foi possível carregar as fotos. Tente de novo daqui a pouco.");
+  }
+}
+
+function montar() {
+  $("grade").innerHTML = "";
+  cards = fotos.map((nome, i) => {
+    const d = document.createElement("div");
+    d.className = "foto";
+    d.innerHTML = `<img loading="lazy" alt=""><div class="marca"></div><span class="num"></span>
+      <div class="check" aria-label="Selecionar"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>`;
+    const img = d.querySelector("img");
+    img.onload = () => img.classList.add("ok");
+    img.src = caminho(nome);
+    d.querySelector(".marca").textContent = MARCA;
+    d.querySelector(".num").textContent = semExt(nome);
+    d.onclick = () => abrir(i);
+    d.querySelector(".check").onclick = e => { e.stopPropagation(); alternar(i); };
+    $("grade").appendChild(d);
+    return d;
+  });
+  atualizar();
+}
+
+function alternar(i) {
+  const n = fotos[i];
+  selecionadas.has(n) ? selecionadas.delete(n) : selecionadas.add(n);
+  salvar();
+  atualizar();
+}
+
+function visiveis() {
+  return fotos.map((_, i) => i).filter(i => filtro === "todas" || selecionadas.has(fotos[i]));
+}
+
+function aplicarFiltro() {
+  cards.forEach((c, i) => c.style.display = (filtro === "todas" || selecionadas.has(fotos[i])) ? "" : "none");
+  if (filtro === "selecionadas" && selecionadas.size === 0) status("Você ainda não escolheu nenhuma foto.");
+  else if (fotos.length) status("");
+}
+
+function atualizar() {
+  cards.forEach((c, i) => c.classList.toggle("marcada", selecionadas.has(fotos[i])));
+  const q = selecionadas.size;
+  $("qtd").textContent = q;
+  $("qtdTexto").textContent = q === 1 ? "foto selecionada" : "fotos selecionadas";
+  $("barra").classList.toggle("visivel", q > 0);
+  $("fSel").textContent = `Selecionadas (${q})`;
+  if (atual >= 0) {
+    const m = selecionadas.has(fotos[atual]);
+    $("vSel").textContent = m ? "✓ Selecionada" : "Selecionar esta foto";
+    $("vSel").classList.toggle("marcada", m);
+  } else {
+    aplicarFiltro();
+  }
+}
+
+function abrir(i) {
+  navLista = visiveis();
+  $("visor").classList.add("aberto");
+  document.body.style.overflow = "hidden";
+  mostrar(i);
+}
+
+function mostrar(i) {
+  atual = i;
+  $("vImg").src = caminho(fotos[i]);
+  $("vInfo").textContent = `${semExt(fotos[i])}  ·  ${navLista.indexOf(i) + 1} de ${navLista.length}`;
+  atualizar();
+}
+
+function passo(d) {
+  const n = navLista.length;
+  const pos = navLista.indexOf(atual);
+  mostrar(navLista[(pos + d + n) % n]);
+}
+
+function fechar() {
+  $("visor").classList.remove("aberto");
+  document.body.style.overflow = "";
+  atual = -1;
+  atualizar();
+}
+
+$("vFechar").onclick = fechar;
+$("vAnt").onclick = () => passo(-1);
+$("vProx").onclick = () => passo(1);
+$("vSel").onclick = () => alternar(atual);
+
+document.addEventListener("keydown", e => {
+  if (atual < 0) return;
+  if (e.key === "ArrowLeft") passo(-1);
+  if (e.key === "ArrowRight") passo(1);
+  if (e.key === "Escape") fechar();
+});
+
+let x0 = null;
+$("vMeio").addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+$("vMeio").addEventListener("touchend", e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 50) passo(dx < 0 ? 1 : -1);
+  x0 = null;
+});
+
+document.addEventListener("contextmenu", e => { if (e.target.tagName === "IMG") e.preventDefault(); });
+
+document.querySelectorAll(".filtro").forEach(b => b.onclick = () => {
+  filtro = b.dataset.f;
+  document.querySelectorAll(".filtro").forEach(x => x.classList.toggle("ativo", x === b));
+  aplicarFiltro();
+});
+
+$("finalizar").onclick = () => {
+  const esc = fotos.filter(f => selecionadas.has(f));
+  $("mTitulo").textContent = `${esc.length} foto${esc.length > 1 ? "s" : ""} escolhida${esc.length > 1 ? "s" : ""}`;
+  $("miniaturas").innerHTML = "";
+  esc.forEach(f => { const im = document.createElement("img"); im.src = caminho(f); $("miniaturas").appendChild(im); });
+  $("nome").value = localStorage.getItem("nome_paola") || "";
+  $("nome").classList.remove("erro");
+  $("modal").classList.add("aberto");
+};
+
+const fecharModal = () => $("modal").classList.remove("aberto");
+$("cancelar").onclick = fecharModal;
+$("modal").onclick = e => { if (e.target === $("modal")) fecharModal(); };
+$("nome").oninput = () => $("nome").classList.remove("erro");
+
+$("enviar").onclick = () => {
+  const nome = $("nome").value.trim();
+  if (!nome) {
+    $("nome").classList.add("erro");
+    $("nome").placeholder = "Digite seu nome para continuar";
+    $("nome").focus();
+    return;
+  }
+  localStorage.setItem("nome_paola", nome);
+  const esc = fotos.filter(f => selecionadas.has(f));
+  const q = esc.length;
+  const msg = `Olá, Paola! Aqui é ${nome} 😊\nEscolhi ${q} foto${q > 1 ? "s" : ""}:\n\n` +
+              esc.map(f => "• " + semExt(f)).join("\n");
+  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+};
+
+carregar();
+</script>
+</body>
+</html>
